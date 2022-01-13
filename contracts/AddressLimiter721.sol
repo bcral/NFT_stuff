@@ -5,14 +5,14 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "hardhat/console.sol";
 
-contract PracticeNFT is ERC721("bcral", "BCRAL") {
+contract AddressLimiter721 is ERC721 {
     using Counters for Counters.Counter;
 
     Counters.Counter public tokenCounter;
     uint256 MAX_SUPPLY;
     uint256 ADDRESS_MAX;
 
-    constructor(uint256 _MAX_SUPPLY, uint256 _ADDRESS_MAX) {
+    constructor(uint256 _MAX_SUPPLY, uint256 _ADDRESS_MAX, string memory _name, string memory _symbol) ERC721(_name, _symbol) {
         MAX_SUPPLY = _MAX_SUPPLY;
         ADDRESS_MAX = _ADDRESS_MAX;
     }
@@ -39,9 +39,8 @@ contract PracticeNFT is ERC721("bcral", "BCRAL") {
     // Functions
 
     // Mint with max supply andd max address limiters
-    function safeMint(
+    function mint(
         address to) public virtual checkAddressMax(to) checkMax {
-        require(tokenCounter._value < MAX_SUPPLY, "Max supply is reached - cannot mint any more.");
         _safeMint(to, tokenCounter.current(), "");
         tokenCounter.increment();
     }
